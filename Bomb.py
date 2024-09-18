@@ -6,7 +6,7 @@ from Character import Character
 from config import *
 
 
-class Mario(Character):
+class Bomb(Character):
 
     def __init__(self):
         self.marioImage = 'graphics/marioPipe.png'
