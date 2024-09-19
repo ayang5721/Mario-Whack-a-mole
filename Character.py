@@ -9,7 +9,7 @@ class Character:
         self.x = x
         self.y = y
         self.timeCreated = time.time()
-        self.timeAlive = random.uniform(10.0, 20.0)
+        self.timeAlive = random.uniform(1.0, 2.0)
 
     def isAlive(self):
         return time.time() < (self.timeCreated + self.timeAlive)
