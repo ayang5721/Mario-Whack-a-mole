@@ -8,7 +8,8 @@ from config import *
 
 class Bomb(Character):
 
-    def __init__(self):
+    def __init__(self, screen, x, y):
+        super().__init__(screen, x, y)
         self.marioImage = 'graphics/marioPipe.png'
      
     def display(self):

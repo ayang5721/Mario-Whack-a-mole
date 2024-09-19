@@ -9,19 +9,16 @@ class Character:
         self.x = x
         self.y = y
         self.timeCreated = time.time()
-        self.timeAlive = random.uniform(0.25, 1.0)
+        self.timeAlive = random.uniform(10.0, 20.0)
 
     def isAlive(self):
-        return time.time() > (self.timeCreated + self.timeAlive)
+        return time.time() < (self.timeCreated + self.timeAlive)
     
-    def isClicked(self):
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouseX, mouseY = event.pos
-                xMin = (self.x * cellSize)
-                xMax = (self.x * cellSize) + cellSize
-                yMin = (self.y * cellSize)
-                yMax = (self.y * cellSize) + cellSize
-                if xMin <= mouseX < xMax and yMin <= mouseY < yMax:
-                    return True
+    def isClicked(self, mouseX, mouseY):
+        xMin = (self.x)
+        xMax = (self.x) + cellSize      
+        yMin = (self.y)
+        yMax = (self.y) + cellSize
+        if xMin <= mouseX <= xMax and yMin <= mouseY <= yMax:
+            return True
         return False

@@ -3,9 +3,8 @@ import random
 import time
 from config import *
 from Mario import Mario
-
-
-
+from Bomb import Bomb
+from Luigi import Luigi
 
 # Initialize Pygame
 pygame.init()
@@ -39,45 +38,70 @@ def draw_grid():
 			y = row * cellSize
 			screen.blit(pipe_img, (x, y))
 
-# Function to show Mario head
-def show_mario():
-	global mario_pos, mario_timer
-	row = random.randint(0, GRID_SIZE - 1)
-	col = random.randint(0, GRID_SIZE - 1)
-	mario_pos = (row, col)
-	mario_timer = time.time() + random.uniform(0.15, 1.0)
-
 # Main game loop
 running = True
-show_mario()
+
+
 while running:
 	screen.fill(WHITE)
 	draw_grid()
 
-	# Check if Mario head should disappear
-	if mario_pos and time.time() > mario_timer:
-		mario_pos = None
-		show_mario()
+	seed = random.random()
+	randomX = random.randint(0,2) * cellSize
+	randomY = random.randint(0,2) * cellSize
 
-	# Draw Mario head
-	if mario_pos:
-		row, col = mario_pos
-		x = col * cellSize
-		y = row * cellSize
-		screen.blit(mario_img, (x, y))
+	if seed < 0.03:
+		characters.append(Mario(screen, randomX, randomY))
+	elif seed < 0.045:
+		characters.append(Bomb(screen, randomX, randomY))
+	elif seed < 0.06:
+		characters.append(Luigi(screen, randomX, randomY))
 
 	# Event handling
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
+		elif event.type == pygame.MOUSEBUTTONDOWN:
+			mouseX, mouseY = event.pos
+			for character in characters:
+				if character.isClicked(mouseX, mouseY):
+					if character.__class__.__name__ == "Mario":
+						score += 1
+						print('Mario')
+					elif character.__class__.__name__ == "Bomb":
+						#code for when you click bomb
+						print('Bomb')
+						pass
+					elif character.__class__.__name__ == "Luigi":
+						#code for when you click luigi
+						print('Luigi')
+						pass
+					characters.remove(character)
 
+	# different actions depending on type of character
 	for character in characters:
 		character.display()
-		if character.isClicked() or not character.isAlive():
-			characters.remove(character)
-			# different actions depending on type of character
-	
+		# print("x: ", character.x, "y: ", character.y)
+		# print(character.isClicked())
 
+	"""if character.isClicked():
+			print('clicked')
+			if character.__class__.__name__ == "Mario":
+				score += 1
+				print('Mario')
+			elif character.__class__.__name__ == "Bomb":
+				#code for when you click bomb
+				print('Bomb')
+				pass
+			elif character.__class__.__name__ == "Luigi":
+				#code for when you click luigi
+				print('Luigi')
+				pass	
+			characters.remove(character)
+		elif not character.isAlive():
+			characters.remove(character)
+			pass"""
+		
 
 	# Draw score
 	score_text = font.render(f"Score: {score}", True, BLACK)
@@ -87,7 +111,7 @@ while running:
 	pygame.display.flip()
 
 	# Cap the frame rate
-	clock.tick(30)
+	clock.tick(5)
 
 # Quit Pygame
 pygame.quit()
