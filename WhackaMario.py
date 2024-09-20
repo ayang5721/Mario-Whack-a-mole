@@ -9,12 +9,29 @@ from Luigi import Luigi
 # Initialize Pygame
 pygame.init()
 
+# Score file
+SCORE_FILE = "scores.txt"
+
+def save_score(score):
+    with open(SCORE_FILE, "a") as file:
+        file.write(f"{score}\n")
+
+def load_scores():
+    try:
+        with open(SCORE_FILE, "r") as file:
+            scores = [int(line.strip()) for line in file]
+    except FileNotFoundError:
+        scores = []
+    return scores.sort()
+
 # Load images
 pipe_img = pygame.image.load('graphics/pipe.png')
 pipe_img = pygame.transform.scale(pipe_img, (cellSize, cellSize))
 
+brick_img = pygame.image.load('graphics/brick.png')
+
 # Create screen
-screen = pygame.display.set_mode((width, height))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Whack-a-Mario")
 
 # Font for score....
@@ -38,12 +55,18 @@ def draw_grid():
 			y = row * cellSize
 			screen.blit(pipe_img, (x, y))
 
+def draw_text(text, font, color, surface, x, y):
+    textobj = font.render(text, True, color)
+    textrect = textobj.get_rect(center=(x, y))
+    surface.blit(textobj, textrect)
+
 # Main game loop
 running = True
 timeUp = False
 
 while running:
 	while not timeUp:
+		print(load_scores())
 		screen.fill(WHITE)
 		draw_grid()
 
@@ -64,6 +87,7 @@ while running:
 		# Event handling
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
+				timeUp = True
 				running = False
 			elif event.type == pygame.MOUSEBUTTONDOWN:
 				mouseX, mouseY = event.pos
@@ -86,8 +110,9 @@ while running:
 		# different actions depending on type of character
 		for character in characters:
 			character.display()
-      if not character.isAlive():
-			  characters.remove(character)
+			if not character.isAlive():
+				characters.remove(character)
+				grid[character.y//cellSize][character.x//cellSize] = 0
 
 		# Draw score
 		score_text = font.render(f"Score: {score}", True, BLACK)
@@ -99,11 +124,40 @@ while running:
 		# Cap the frame rate
 		clock.tick(30)
 
+	# Game over screen
+	screen.fill(BLUE)
+	draw_text(f'Score: {score}', font, WHITE, screen, WIDTH // 2, HEIGHT // 2 - 100)
+    
+    # Buttons
+	quit_button = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2, 200, 50)
+	restart_button = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 60, 200, 50)
+    
+	pygame.draw.rect(screen, WHITE, quit_button)
+	pygame.draw.rect(screen, WHITE, restart_button)
+    
+	draw_text('Quit', font, BLACK, screen, WIDTH // 2, HEIGHT // 2 + 25)
+	draw_text('Restart', font, BLACK, screen, WIDTH // 2, HEIGHT // 2 + 85)
+
+	draw_text(load_scores(), font, WHITE, screen, WIDTH // 2, HEIGHT // 2 + 200)
+
+	# Event handling
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
-			
-	screen.fill(BLUE)
+		elif event.type == pygame.MOUSEBUTTONDOWN:
+			mouseX, mouseY = event.pos
+			if quit_button.collidepoint(mouseX, mouseY):
+				save_score(score)
+				running = False
+			elif restart_button.collidepoint(mouseX, mouseY):
+				save_score(score)
+				score = 0
+				characters = []
+				grid = [[0, 0, 0],
+						[0, 0, 0],
+						[0, 0, 0]]
+				timeUp = False
+    
 	pygame.display.flip()
 
 # Quit Pygame
