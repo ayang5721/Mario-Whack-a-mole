@@ -81,27 +81,10 @@ while running:
 	# different actions depending on type of character
 	for character in characters:
 		character.display()
-		# print("x: ", character.x, "y: ", character.y)
-		# print(character.isClicked())
-
-	"""if character.isClicked():
-			print('clicked')
-			if character.__class__.__name__ == "Mario":
-				score += 1
-				print('Mario')
-			elif character.__class__.__name__ == "Bomb":
-				#code for when you click bomb
-				print('Bomb')
-				pass
-			elif character.__class__.__name__ == "Luigi":
-				#code for when you click luigi
-				print('Luigi')
-				pass	
+		if not character.isAlive():
 			characters.remove(character)
-		elif not character.isAlive():
-			characters.remove(character)
-			pass"""
 		
+
 
 	# Draw score
 	score_text = font.render(f"Score: {score}", True, BLACK)
