@@ -54,10 +54,6 @@ class Mario(Character):
         for i in range(middleFrames):
             self.frames.insert(indexMid, middleFrame)
 
-
-
-
-     
     def display(self):
         # convert time remaining alive into a specific frame
         frameIndex = round((self.timeAlive - self.timeRemaining()) * 30)
