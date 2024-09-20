@@ -9,11 +9,14 @@ class Character:
         self.x = x
         self.y = y
         self.timeCreated = time.time()
-        self.timeAlive = random.uniform(1.0, 2.0)
+        self.timeAlive = round(random.uniform(2.0, 5.0), 2)
 
     def isAlive(self):
         return time.time() < (self.timeCreated + self.timeAlive)
     
+    def timeRemaining(self):
+        return (self.timeCreated + self.timeAlive) - time.time()
+
     def isClicked(self, mouseX, mouseY):
         xMin = (self.x)
         xMax = (self.x) + cellSize      

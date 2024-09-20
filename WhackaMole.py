@@ -86,8 +86,8 @@ while running:
 		# different actions depending on type of character
 		for character in characters:
 			character.display()
-			# print("x: ", character.x, "y: ", character.y)
-			# print(character.isClicked())
+      if not character.isAlive():
+			  characters.remove(character)
 
 		# Draw score
 		score_text = font.render(f"Score: {score}", True, BLACK)
