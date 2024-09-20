@@ -17,12 +17,13 @@ def save_score(score):
         file.write(f"{score}\n")
 
 def load_scores():
-    try:
-        with open(SCORE_FILE, "r") as file:
-            scores = [int(line.strip()) for line in file]
-    except FileNotFoundError:
-        scores = []
-    return scores.sort()
+	try:
+		with open(SCORE_FILE, "r") as file:
+			scores = [int(line.strip()) for line in file]
+			scores.sort(reverse=True)
+	except FileNotFoundError:
+		scores = []
+	return scores
 
 # Load images
 pipe_img = pygame.image.load('graphics/pipe.png')
@@ -97,6 +98,7 @@ while running:
 							score += 1
 						elif character.__class__.__name__ == "Bomb":
 							#code for when you click bomb
+							save_score(score)
 							timeUp = True
 							pass
 						elif character.__class__.__name__ == "Luigi":
@@ -138,7 +140,8 @@ while running:
 	draw_text('Quit', font, BLACK, screen, WIDTH // 2, HEIGHT // 2 + 25)
 	draw_text('Restart', font, BLACK, screen, WIDTH // 2, HEIGHT // 2 + 85)
 
-	draw_text(load_scores(), font, WHITE, screen, WIDTH // 2, HEIGHT // 2 + 200)
+	for i in range(min(len(load_scores()) - 1, 10)):
+		draw_text(str(load_scores()[i]), font, WHITE, screen, WIDTH // 2, HEIGHT // 2 + 160 + i * 30)
 
 	# Event handling
 	for event in pygame.event.get():
@@ -147,10 +150,8 @@ while running:
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			mouseX, mouseY = event.pos
 			if quit_button.collidepoint(mouseX, mouseY):
-				save_score(score)
 				running = False
 			elif restart_button.collidepoint(mouseX, mouseY):
-				save_score(score)
 				score = 0
 				characters = []
 				grid = [[0, 0, 0],
