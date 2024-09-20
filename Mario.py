@@ -10,7 +10,7 @@ class Mario(Character):
 
     def __init__(self, screen, x, y):
         super().__init__(screen, x, y)
-        self.marioImage = 'graphics/marioPipe.png'
+        self.marioImage = 'graphics/mario.png'
      
     def display(self):
         mario_img = pygame.image.load(self.marioImage)

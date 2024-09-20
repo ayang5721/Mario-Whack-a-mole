@@ -10,7 +10,7 @@ class Luigi(Character):
 
     def __init__(self, screen, x, y):
         super().__init__(screen, x, y)
-        self.luigiImage = 'graphics/marioPipe.png'
+        self.luigiImage = 'graphics/luigi.png'
      
     def display(self):
         luigiImg = pygame.image.load(self.luigiImage)
