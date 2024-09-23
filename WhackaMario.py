@@ -40,8 +40,12 @@ font = pygame.font.Font(None, 36)
 
 # Initialize clock
 clock = pygame.time.Clock()
+start_time = time.time()
+game_duration = 60  # 60 seconds
 
 # Game variables
+running = True
+timeUp = False
 score = 0
 characters = []
 grid = [[0, 0, 0],
@@ -62,15 +66,18 @@ def draw_text(text, font, color, surface, x, y):
     surface.blit(textobj, textrect)
 
 # Main game loop
-running = True
-timeUp = False
-
 while running:
 	while not timeUp:
-		print(load_scores())
 		screen.fill(WHITE)
 		draw_grid()
 
+		current_time = time.time()
+		elapsed_time = current_time - start_time
+		remaining_time = max(0, game_duration - elapsed_time)
+		if remaining_time == 0:
+			timeUp = True
+			save_score(score)
+			break
 		seed = random.random()
 		randomX = random.randint(0,2) * cellSize
 		randomY = random.randint(0,2) * cellSize
@@ -120,6 +127,9 @@ while running:
 		# Draw score
 		score_text = font.render(f"Score: {score}", True, BLACK)
 		screen.blit(score_text, (10, 10))
+
+		timer_text = font.render(f"Time: {int(remaining_time)}", True, BLACK)
+		screen.blit(timer_text, (WIDTH - 150, 10))
 
 		# Update display
 		pygame.display.flip()
