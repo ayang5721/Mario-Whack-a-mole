@@ -86,7 +86,7 @@ while running:
 		# different actions depending on type of character
 		for character in characters:
 			character.display()
-      if not character.isAlive():
+      		if not character.isAlive():
 			  characters.remove(character)
 
 		# Draw score
