@@ -46,6 +46,7 @@ game_duration = 60  # 60 seconds
 # Game variables
 running = True
 timeUp = False
+frozen = False
 score = 0
 characters = []
 grid = [[0, 0, 0],
@@ -97,24 +98,25 @@ while running:
 			if event.type == pygame.QUIT:
 				timeUp = True
 				running = False
-			elif event.type == pygame.MOUSEBUTTONDOWN:
+			elif event.type == pygame.MOUSEBUTTONDOWN and not frozen:
 				mouseX, mouseY = event.pos
 				for character in characters:
 					if character.isClicked(mouseX, mouseY):
 						if character.__class__.__name__ == "Mario":
 							score += 1
+							characters.remove(character)
 						elif character.__class__.__name__ == "Bomb":
 							#code for when you click bomb
-							character.boom()
+							character.booming = True
 							save_score(score)
-							timeUp = True
+							game_duration = elapsed_time + 1
+							frozen = True
 							pass
 						elif character.__class__.__name__ == "Luigi":
 							score += 3
 							#code for when you click luigi
-			
+							characters.remove(character)
 							pass
-						characters.remove(character)
 						grid[character.y//cellSize][character.x//cellSize] = 0
 
 		# different actions depending on type of character

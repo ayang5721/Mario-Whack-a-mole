@@ -15,6 +15,8 @@ class Bomb(Character):
         # Makes list of frames
         self.frames = []
         self.boomAnimation = []
+        self.booming = False
+        self.c = 0
 
         #Turns blowing up bomb gif into list of frames
         gif_path = 'graphics/bomb_Blow.gif'
@@ -72,13 +74,16 @@ class Bomb(Character):
 
     def display(self):
         # convert time remaining alive into a specific frame
-        frameIndex = round((self.timeAlive - self.timeRemaining()) * 30)
-        frameIndex = clamp(frameIndex, 0, len(self.frames) - 1)
-        bomb_img = self.frames[frameIndex]
-        self.screen.blit(bomb_img, (self.x, self.y))
+        if not self.booming:
+            frameIndex = round((self.timeAlive - self.timeRemaining()) * 30)
+            frameIndex = clamp(frameIndex, 0, len(self.frames) - 1)
+            bomb_img = self.frames[frameIndex]
+            self.screen.blit(bomb_img, (self.x, self.y))
+        else:
+            frameIndex = clamp(self.c, 0, len(self.boomAnimation) - 1)
+            bomb_img = self.boomAnimation[frameIndex]
+            self.screen.blit(bomb_img, (self.x, self.y))
+            self.c += 1
 
     def boom(self):
-        frameIndex = round((self.timeAlive - self.timeRemaining()) * 30)
-        frameIndex = clamp(frameIndex, 0, len(self.boomAnimation) - 1)
-        bomb_img = self.boomAnimation[frameIndex]
-        self.screen.blit(bomb_img, (self.x, self.y))
+        self.booming = True
