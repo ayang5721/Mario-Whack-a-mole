@@ -98,6 +98,7 @@ while running:
 							score += 1
 						elif character.__class__.__name__ == "Bomb":
 							#code for when you click bomb
+							character.boom()
 							save_score(score)
 							timeUp = True
 							pass
